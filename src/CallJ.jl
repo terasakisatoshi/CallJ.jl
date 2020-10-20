@@ -1,9 +1,15 @@
 module CallJ
 
-#TYPES=[Cint, Cfloat, Cdouble]
-TYPES=[Cint]
+TYPES=[Cint, Cfloat, Cdouble]
 
 Base.@ccallable greet()::Cvoid = println("Hello World!")
+
+for T in TYPES
+    @eval Base.@ccallable function gettype(x::$(T))::Cvoid
+        typeof(x)
+        return nothing
+    end
+end
 
 for T in TYPES
     @eval Base.@ccallable function jlmax(cx::Ptr{$T}, len::Csize_t)::$T

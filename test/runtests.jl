@@ -8,7 +8,15 @@ end
 
 for T in CallJ.TYPES
     @eval begin
-            @testset "jlmax $($T)" begin
+        @testset "gettype $($T)" begin
+            @test isnothing(CallJ.gettype(one($(T))))
+        end
+    end
+end
+
+for T in CallJ.TYPES
+    @eval begin
+        @testset "jlmax $($T)" begin
             x = $(T)[1,2,3,4,5]
             @test $(T)(5) ≈ CallJ.jlmax(pointer(x), length(x)|>UInt)
         end
@@ -18,7 +26,7 @@ end
 
 for T in CallJ.TYPES
     @eval begin
-            @testset "jlmin $($T)" begin
+        @testset "jlmin $($T)" begin
             x = $(T)[1,2,3,4,5]
             @test $(T)(1) ≈ CallJ.jlmin(pointer(x), length(x)|>UInt)
         end
@@ -27,7 +35,7 @@ end
 
 for T in CallJ.TYPES
     @eval begin
-            @testset "jlminus $($T)" begin
+        @testset "jlminus $($T)" begin
             x = $(T)[1,2,3,4,5]
             expected = $(T)[-1,-2,-3,-4,-5]
             CallJ.jlminus(pointer(x), length(x)|>UInt)

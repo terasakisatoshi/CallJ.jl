@@ -32,6 +32,10 @@ int main(int argc, char *argv[])
   jl_options.image_file = JULIAC_PROGRAM_LIBNAME;
   julia_init(JL_IMAGE_JULIA_HOME);
 
+  greet();
+  $array_type array_type;
+  gettype(array_type);
+
   size_t len = 6;
   $(array_type) *x = ($(array_type) *)malloc(len * sizeof($(array_type)));
   for (int i = 0; i < len; i++)
@@ -44,7 +48,6 @@ int main(int argc, char *argv[])
     printf("x[%d]=$(type_format)\\n", i, x[i]);
   }
 
-  greet();
   printf("calc max of Array x");
   printf("jlmax(x)=$(type_format)\\n", jlmax(x, len));
   
@@ -89,6 +92,7 @@ template = """
 
 // prototype of the C entry points in our application
 void greet(void);
+void gettype($(array_type) x);
 $(array_type) jlmax($(array_type) *cx, size_t len);
 $(array_type) jlmin($(array_type) *cx, size_t len);
 int jlminus($(array_type) *cx, size_t len);
