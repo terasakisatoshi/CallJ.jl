@@ -23,6 +23,6 @@ docs/site/
 # environment.
 Manifest.toml
 
-libcallj.dylib
+libcallj.*
 callj_*
 main_*
