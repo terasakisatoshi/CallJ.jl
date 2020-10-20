@@ -6,7 +6,7 @@ Base.@ccallable greet()::Cvoid = println("Hello World!")
 
 for T in TYPES
     @eval Base.@ccallable function gettype(x::$(T))::Cvoid
-        typeof(x)
+        @show typeof(x)
         return nothing
     end
 end
