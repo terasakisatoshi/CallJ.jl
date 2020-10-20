@@ -33,8 +33,14 @@ int main(int argc, char *argv[])
   julia_init(JL_IMAGE_JULIA_HOME);
 
   greet();
-  $array_type array_type = 1;
-  gettype(array_type);
+  int myint = 1;
+  gettype(myint);
+
+  float myfloat = 1;
+  gettype(myfloat);
+
+  double mydobule = 1;
+  gettype(mydobule);
 
   size_t len = 6;
   $(array_type) *x = ($(array_type) *)malloc(len * sizeof($(array_type)));

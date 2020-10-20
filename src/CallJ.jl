@@ -1,6 +1,8 @@
 module CallJ
 
-TYPES=[Cint, Cfloat, Cdouble]
+ALL_TYPES=[Cint, Clong, Cfloat, Cdouble]
+
+TYPES=[Cint]
 
 Base.@ccallable greet()::Cvoid = println("Hello World!")
 
