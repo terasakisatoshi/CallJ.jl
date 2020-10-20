@@ -59,8 +59,8 @@ $(MAIN)_float: ${MAIN}_float.o lib${LIBNAME}.$(DLEXT)
 $(MAIN)_double: ${MAIN}_double.o lib${LIBNAME}.$(DLEXT)
 	$(CC) -o $@ $< $(LDFLAGS) -l${LIBNAME}
 
-all: $(MAIN)_int
-	./$(MAIN)_int
+all: $(MAIN)_double
+	./$(MAIN)_double
 
 clean:
 	$(RM) ${MAIN}_* *.$(DLEXT) callj_*
