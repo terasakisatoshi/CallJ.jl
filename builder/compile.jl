@@ -5,5 +5,5 @@ PackageCompiler.create_sysimage(
     project=pwd(),
     precompile_execution_file=[joinpath("test", "runtests.jl")],
     sysimage_path="libcallj.$(Libdl.dlext)",
-    incremental=false, filter_stdlibs=true,
+    #incremental=false, filter_stdlibs=true,
 )
