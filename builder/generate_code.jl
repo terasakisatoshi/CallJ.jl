@@ -113,10 +113,7 @@ function generate(array_type::Union{Symbol, AbstractString})
   generate_C_header(array_type)
 end
 
-#=
+
 for t in [:int, :long, :float, :double]
   generate(t)
 end
-=#
-
-generate(:int)
