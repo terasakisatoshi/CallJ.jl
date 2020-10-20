@@ -2,7 +2,7 @@ module CallJ
 
 ALL_TYPES=[Cint, Clong, Cfloat, Cdouble]
 
-TYPES=[Cint]
+TYPES=[Cdouble]
 
 Base.@ccallable greet()::Cvoid = println("Hello World!")
 
@@ -10,6 +10,20 @@ for T in TYPES
     @eval Base.@ccallable function gettype(x::$(T))::Cvoid
         @show typeof(x)
         return nothing
+    end
+end
+
+for T in TYPES
+    @eval Base.@ccallable function f(x::$(T))::$(T)
+        return x
+    end
+
+    @eval Base.@ccallable function f(x::$(T), y::$(T))::$(T)
+        return x + y
+    end
+
+    @eval Base.@ccallable function f(x::$(T), y::$(T), z::$(T))::$(T)
+        return x + y + z
     end
 end
 

@@ -14,6 +14,17 @@ for T in CallJ.TYPES
     end
 end
 
+
+for T in CallJ.TYPES
+    @eval begin
+        @testset "f $($T) " begin
+            @test one($T) ≈ (CallJ.f(one($T)))
+            @test 2 * one($T) ≈ (CallJ.f(one($T), one($T)))
+            @test 3 * one($T) ≈ (CallJ.f(one($T), one($T), one($T)))
+        end
+    end
+end
+
 for T in CallJ.TYPES
     @eval begin
         @testset "jlmax $($T)" begin
@@ -28,7 +39,7 @@ for T in CallJ.TYPES
     @eval begin
         @testset "jlmin $($T)" begin
             x = $(T)[1,2,3,4,5]
-            @test $(T)(1) ≈ CallJ.jlmin(pointer(x), length(x)|>UInt)
+            @test one($(T)) ≈ CallJ.jlmin(pointer(x), length(x)|>UInt)
         end
     end
 end

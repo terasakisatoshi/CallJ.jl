@@ -33,14 +33,10 @@ int main(int argc, char *argv[])
   julia_init(JL_IMAGE_JULIA_HOME);
 
   greet();
-  int myint = 1;
-  gettype(myint);
+  $(array_type) myvalue = 1;
+  gettype(myvalue);
 
-  float myfloat = 1;
-  gettype(myfloat);
-
-  double mydobule = 1;
-  gettype(mydobule);
+  printf("f(2,3,4)=$(type_format)", f(2,3,4));
 
   size_t len = 6;
   $(array_type) *x = ($(array_type) *)malloc(len * sizeof($(array_type)));
@@ -99,6 +95,7 @@ template = """
 // prototype of the C entry points in our application
 void greet(void);
 void gettype($(array_type) x);
+$(array_type) f($(array_type) x, $(array_type) y, $(array_type) z);
 $(array_type) jlmax($(array_type) *cx, size_t len);
 $(array_type) jlmin($(array_type) *cx, size_t len);
 int jlminus($(array_type) *cx, size_t len);
