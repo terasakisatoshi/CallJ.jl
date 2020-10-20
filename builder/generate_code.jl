@@ -1,11 +1,15 @@
 function generate_C_source(array_type::Union{Symbol, AbstractString})
 
-if Symbol(array_type) == :double
-  type_format = "%f"
-elseif Symbol(array_type) == :int
+if Symbol(array_type) == :int
   type_format = "%d"
+elseif Symbol(array_type) == :long
+  type_format = "%ld"
+elseif Symbol(array_type) == :float
+  type_format = "%f"
+elseif Symbol(array_type) == :double
+  type_format = "%lf"
 else
-  error("Invalid array_type. Expected double or int")
+  error("Invalid array_type. Expected double or int, actual=$(array_type)")
 end
 
 template = """
@@ -28,11 +32,11 @@ int main(int argc, char *argv[])
   jl_options.image_file = JULIAC_PROGRAM_LIBNAME;
   julia_init(JL_IMAGE_JULIA_HOME);
 
-  size_t len = 5;
+  size_t len = 6;
   $(array_type) *x = ($(array_type) *)malloc(len * sizeof($(array_type)));
   for (int i = 0; i < len; i++)
   {
-    x[i] = i;
+    x[i] = ($(array_type))i;
   }
   printf("show initial Array x\\n");
   for (int i = 0; i < len; i++)
@@ -77,13 +81,6 @@ end
 
 function generate_C_header(array_type::Union{Symbol, AbstractString})
 array_type = Symbol(array_type)
-if array_type == :double
-  type_format = "%f"
-elseif array_type == :int
-  type_format = "%d"
-else
-  error("Invalid array_type. Expected :double or :int")
-end
 
 template = """
 // Julia headers (for initialization and gc commands)
@@ -104,8 +101,15 @@ end
 
 end
 
-generate_C_source(:int)
-generate_C_source(:double)
+function generate(array_type::Union{Symbol, AbstractString})
+  generate_C_source(array_type)
+  generate_C_header(array_type)
+end
 
-generate_C_header(:int)
-generate_C_header(:double)
+#=
+for t in [:int, :long, :float, :double]
+  generate(t)
+end
+=#
+
+generate(:int)

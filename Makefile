@@ -32,10 +32,16 @@ lib${LIBNAME}.$(DLEXT): builder/compile.jl src/${PACKAGENAME}.jl
 	$(JULIA) --startup-file=no --project=builder -e 'using Pkg; Pkg.instantiate()'
 	$(JULIA) --startup-file=no --project=builder $<
 
-${MAIN}_int.c ${MAIN}_double.c: builder/generate_code.jl
+${MAIN}_int.c ${MAIN}_long.c ${MAIN}_float.c ${MAIN}_double.c: builder/generate_code.jl
 	$(JULIA) --startup-file=no --project=builder $<
 
 ${MAIN}_int.o: ${MAIN}_int.c
+	$(CC) $< -c -o $@ $(CFLAGS) -DJULIAC_PROGRAM_LIBNAME=\"lib${LIBNAME}.$(DLEXT)\"
+
+${MAIN}_long.o: ${MAIN}_long.c
+	$(CC) $< -c -o $@ $(CFLAGS) -DJULIAC_PROGRAM_LIBNAME=\"lib${LIBNAME}.$(DLEXT)\"
+
+${MAIN}_float.o: ${MAIN}_float.c
 	$(CC) $< -c -o $@ $(CFLAGS) -DJULIAC_PROGRAM_LIBNAME=\"lib${LIBNAME}.$(DLEXT)\"
 
 ${MAIN}_double.o: ${MAIN}_double.c
@@ -43,17 +49,18 @@ ${MAIN}_double.o: ${MAIN}_double.c
 
 $(MAIN)_int: ${MAIN}_int.o lib${LIBNAME}.$(DLEXT)
 	$(CC) -o $@ $< $(LDFLAGS) -l${LIBNAME}
-	# run
-	./$@
+
+$(MAIN)_long: ${MAIN}_long.o lib${LIBNAME}.$(DLEXT)
+	$(CC) -o $@ $< $(LDFLAGS) -l${LIBNAME}
+
+$(MAIN)_float: ${MAIN}_float.o lib${LIBNAME}.$(DLEXT)
+	$(CC) -o $@ $< $(LDFLAGS) -l${LIBNAME}
 
 $(MAIN)_double: ${MAIN}_double.o lib${LIBNAME}.$(DLEXT)
 	$(CC) -o $@ $< $(LDFLAGS) -l${LIBNAME}
-	# run
-	./$@
 
-all: $(MAIN)_int $(MAIN)_double
+all: $(MAIN)_int
 	./$(MAIN)_int
-	./$(MAIN)_double
 
 clean:
-	$(RM) ${MAIN}_* *.$(DLEXT)
+	$(RM) ${MAIN}_* *.$(DLEXT) callj_*
