@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
   $(array_type) myvalue = 1;
   gettype(myvalue);
 
-  printf("f(2,3,4)=$(type_format)", f(2,3,4));
+  printf("f(2,3,4)=$(type_format)\\n", f(2,3,4));
 
   size_t len = 6;
   $(array_type) *x = ($(array_type) *)malloc(len * sizeof($(array_type)));
