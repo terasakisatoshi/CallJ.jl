@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
   julia_init(JL_IMAGE_JULIA_HOME);
 
   greet();
-  $array_type array_type;
+  $array_type array_type = 1;
   gettype(array_type);
 
   size_t len = 6;
@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
     printf("x[%d]=$(type_format)\\n", i, x[i]);
   }
 
-  printf("calc max of Array x");
+  printf("calc max of Array x\\n");
   printf("jlmax(x)=$(type_format)\\n", jlmax(x, len));
   
   printf("apply jlminus to Array x\\n");
