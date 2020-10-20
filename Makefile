@@ -1,3 +1,8 @@
+# Original code is taken from 
+# https://github.com/simonbyrne/libcg/blob/master/Makefile
+
+.PHONY: clean, all
+
 OS := $(shell uname)
 DLEXT := $(shell julia -e 'using Libdl; print(Libdl.dlext)')
 
@@ -20,21 +25,35 @@ endif
 CFLAGS+=-O2 -fPIE -I$(JULIA_DIR)/include/julia
 LDFLAGS+=-L$(JULIA_DIR)/lib -L. -ljulia -lm $(WLARGS)
 
-.DEFAULT_GOAL := ${MAIN}
+.DEFAULT_GOAL := all
 
 lib${LIBNAME}.$(DLEXT): builder/compile.jl src/${PACKAGENAME}.jl
 	$(JULIA) --startup-file=no --project=. -e 'using Pkg; Pkg.instantiate(); Pkg.test()'
 	$(JULIA) --startup-file=no --project=builder -e 'using Pkg; Pkg.instantiate()'
 	$(JULIA) --startup-file=no --project=builder $<
 
-${MAIN}.o: ${MAIN}.c
+${MAIN}_int.c ${MAIN}_double.c: builder/generate_code.jl
+	$(JULIA) --startup-file=no --project=builder $<
+
+${MAIN}_int.o: ${MAIN}_int.c
 	$(CC) $< -c -o $@ $(CFLAGS) -DJULIAC_PROGRAM_LIBNAME=\"lib${LIBNAME}.$(DLEXT)\"
 
-$(MAIN): ${MAIN}.o lib${LIBNAME}.$(DLEXT)
+${MAIN}_double.o: ${MAIN}_double.c
+	$(CC) $< -c -o $@ $(CFLAGS) -DJULIAC_PROGRAM_LIBNAME=\"lib${LIBNAME}.$(DLEXT)\"
+
+$(MAIN)_int: ${MAIN}_int.o lib${LIBNAME}.$(DLEXT)
 	$(CC) -o $@ $< $(LDFLAGS) -l${LIBNAME}
 	# run
-	./${MAIN}
+	./$@
 
-.PHONY: clean
+$(MAIN)_double: ${MAIN}_double.o lib${LIBNAME}.$(DLEXT)
+	$(CC) -o $@ $< $(LDFLAGS) -l${LIBNAME}
+	# run
+	./$@
+
+all: $(MAIN)_int $(MAIN)_double
+	./$(MAIN)_int
+	./$(MAIN)_double
+
 clean:
-	$(RM) ${MAIN}.o *.$(DLEXT) ${MAIN}
+	$(RM) ${MAIN}_* *.$(DLEXT)
