@@ -62,7 +62,7 @@ libjlinit.$(DLEXT): jlinit.c
 	$(CC) $< -shared -fPIC -o $@ $(CFLAGS) $(LDFLAGS) -DJULIAC_PROGRAM_LIBNAME=\"lib${LIBNAME}.$(DLEXT)\"
 
 rustrun: libjlinit.$(DLEXT) lib${LIBNAME}.$(DLEXT)
-	rustc -L$(JULIA_DIR)/lib -L. -ljulia -lcallj -ljlinit -lm -C link-args="-Wl,-rpath,$(JULIA_DIR)/lib -Wl,-rpath,@executable_path -Wl,-rpath,@loader_path" rustrun.rs
+	rustc -L$(JULIA_DIR)/lib -L. -ljulia -lcallj -ljlinit -lm -C link-args="${WLARGS}" rustrun.rs
 	./$@
 
 all: $(MAIN)_double
