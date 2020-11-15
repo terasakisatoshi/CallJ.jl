@@ -21,3 +21,4 @@ Hello World!
 # References
 
 - [simonbyrne/libcg](https://github.com/simonbyrne/libcg)
+- [PackageCompiler](https://github.com/JuliaLang/PackageCompiler.jl)
