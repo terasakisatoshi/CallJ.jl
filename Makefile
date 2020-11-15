@@ -24,7 +24,6 @@ endif
 
 CFLAGS+=-O2 -fPIE -I$(JULIA_DIR)/include/julia
 LDFLAGS+=-L$(JULIA_DIR)/lib -L. -ljulia -lm $(WLARGS)
-
 .DEFAULT_GOAL := all
 
 lib${LIBNAME}.$(DLEXT): builder/compile.jl src/${PACKAGENAME}.jl
@@ -59,8 +58,14 @@ $(MAIN)_float: ${MAIN}_float.o lib${LIBNAME}.$(DLEXT)
 $(MAIN)_double: ${MAIN}_double.o lib${LIBNAME}.$(DLEXT)
 	$(CC) -o $@ $< $(LDFLAGS) -l${LIBNAME}
 
+libjlinit.$(DLEXT): jlinit.c
+	$(CC) $< -shared -fPIC -o $@ $(CFLAGS) $(LDFLAGS) -DJULIAC_PROGRAM_LIBNAME=\"lib${LIBNAME}.$(DLEXT)\"
+
+rustrun: libjlinit.$(DLEXT) lib${LIBNAME}.$(DLEXT)
+	rustc -L$(JULIA_DIR)/lib -L. -ljulia -lcallj -ljlinit -lm -C link-args="-Wl,-rpath,$(JULIA_DIR)/lib -Wl,-rpath,@executable_path -Wl,-rpath,@loader_path" rustrun.rs
+
 all: $(MAIN)_double
 	./$(MAIN)_double
 
 clean:
-	$(RM) ${MAIN}_* *.$(DLEXT) callj_*
+	$(RM) ${MAIN}_* *.$(DLEXT) callj_* rustrun
