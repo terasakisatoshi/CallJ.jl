@@ -63,9 +63,10 @@ libjlinit.$(DLEXT): jlinit.c
 
 rustrun: libjlinit.$(DLEXT) lib${LIBNAME}.$(DLEXT)
 	rustc -L$(JULIA_DIR)/lib -L. -ljulia -lcallj -ljlinit -lm -C link-args="-Wl,-rpath,$(JULIA_DIR)/lib -Wl,-rpath,@executable_path -Wl,-rpath,@loader_path" rustrun.rs
+	./$@
 
 all: $(MAIN)_double
-	./$(MAIN)_double
+	./$<
 
 clean:
 	$(RM) ${MAIN}_* *.$(DLEXT) callj_* rustrun
