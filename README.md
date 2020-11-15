@@ -8,6 +8,16 @@ Building a shared object of Julia package using PackageCompiler and call it from
 $ make
 ```
 
+## Call Julia from Rust (Optional)
+
+- (tested on my mac)
+
+```
+$ make rustrun
+./rustrun
+Hello World!
+```
+
 # References
 
 - [simonbyrne/libcg](https://github.com/simonbyrne/libcg)
