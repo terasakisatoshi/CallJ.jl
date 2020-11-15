@@ -22,7 +22,7 @@ else
   WLARGS := -Wl,-rpath,"$(JULIA_DIR)/lib:$$ORIGIN"
 endif
 
-CFLAGS+=-O2 -fPIE -I$(JULIA_DIR)/include/julia
+CFLAGS+=-O2 -fPIC -I$(JULIA_DIR)/include/julia
 LDFLAGS+=-L$(JULIA_DIR)/lib -L. -ljulia -lm $(WLARGS)
 .DEFAULT_GOAL := all
 
@@ -59,7 +59,7 @@ $(MAIN)_double: ${MAIN}_double.o lib${LIBNAME}.$(DLEXT)
 	$(CC) -o $@ $< $(LDFLAGS) -l${LIBNAME}
 
 libjlinit.$(DLEXT): jlinit.c
-	$(CC) $< -shared -fPIC -o $@ $(CFLAGS) $(LDFLAGS) -DJULIAC_PROGRAM_LIBNAME=\"lib${LIBNAME}.$(DLEXT)\"
+	$(CC) $< -shared -o $@ $(CFLAGS) $(LDFLAGS) -DJULIAC_PROGRAM_LIBNAME=\"lib${LIBNAME}.$(DLEXT)\"
 
 rustrun: libjlinit.$(DLEXT) lib${LIBNAME}.$(DLEXT)
 	rustc -L$(JULIA_DIR)/lib -L. -ljulia -l$(LIBNAME) -ljlinit -lm -C link-args="$(WLARGS)" rustrun.rs
